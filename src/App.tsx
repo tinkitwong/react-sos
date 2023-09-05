@@ -11,11 +11,40 @@ import "./App.css";
 // - [x] Mention that we can use other libraries to handle data fetching / error management
 // - [x] Handle null / undefined values
 // - [ ] Implement semantic HTML for components
+
+// Ensure type safety by introducing interface for Card Component
+// Implemented in L39
+interface ICardProps {
+  title: string;
+  text?: string;
+  target: string;
+  linkTitle: string;
+  href: string;
+  rel?: string;
+  linkClassName: string;
+}
+
+const Card = ({
+  title,
+  text,
+  target,
+  linkTitle,
+  href,
+  /**
+   * Add default value for rel for security reasons when redirecting out of website
+   * noreferrer - keeps external sites from knowing we included their links on our website
+   * noopener - prevent external link from taking control of origin browser window
+   */
+  rel = "noopener noreferrer",
+  linkClassName,
+}: ICardProps) => {
   return (
     <div className="my-8">
       <div>{title}</div>
-      <div>{text}</div>
-      <a className={`${linkClassName}`} target={target} rel={rel} href={href}>
+      {/* Guard against rendering unnecessary elements */}
+      {text && <div>{text}</div>}
+      {/* Remove template string as the input is literally the variable */}
+      <a className={linkClassName} target={target} rel={rel} href={href}>
         {linkTitle}
       </a>
     </div>
