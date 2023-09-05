@@ -110,7 +110,9 @@ function App() {
     });
   }, []);
 
-  return (
+  // Handle Loading and Error states
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error when fetching data. Please refresh...</div>;
     <div>
       {cards.map((item, i) => {
         return (
