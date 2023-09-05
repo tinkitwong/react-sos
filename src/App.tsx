@@ -113,21 +113,27 @@ function App() {
   // Handle Loading and Error states
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error when fetching data. Please refresh...</div>;
+
+  // Handle successful fetch but no data case
+  return !isLoading && !error && cards.length ? (
     <div>
       {cards.map((item, i) => {
         return (
           <Card
             key={i}
-            title={item.title.en}
-            linkTitle={item.link_title}
-            href={item.link}
-            text={item.text}
+            // Handle null / undefined values
+            title={item.title.en ?? `Post ${i} title`}
+            linkTitle={item.link_title ?? `Post ${i} title link`}
+            href={item.link ?? `Post ${i} link`}
+            text={item.text ?? `Post ${i} text`}
             linkClassName={item.id == 1 ? "text-green-500" : ""}
             target={item.id == 1 ? "_blank" : ""}
           />
         );
       })}
     </div>
+  ) : (
+    <p>No data. You might want to refresh</p>
   );
 }
 
