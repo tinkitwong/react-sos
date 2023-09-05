@@ -51,6 +51,25 @@ const Card = ({
   );
 };
 
+// Prefer having standalone response types for API calls instead of adding
+// optional text key here as it is not part of the API response
+interface ICardContentResponse {
+  id: number;
+  title: {
+    id: string;
+    en: string;
+  };
+  body: {
+    id: string;
+    en: string;
+  } | null;
+  link_title: string;
+  link: string;
+}
+
+// Union the response type with the new text property
+type ICardContent = ICardContentResponse & { text?: string };
+
 function App() {
   const [cards, setCards] = useState([]);
 
