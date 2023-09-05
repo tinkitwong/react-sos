@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-const Card = ({ title, text, target, linkTitle, href, rel, linkClassName }) => {
+// TODO:
+// - [x] Implement typing ( Interface ) for components
+// - [x] Implement typing for API response
+// - [x] Add default values for input props if possible
+// - [x] Handle loading state
+// - [x] Handle error state
+// - [x] Handle missing props
+// - [x] Mention that we can use other libraries to handle data fetching / error management
+// - [x] Handle null / undefined values
+// - [ ] Implement semantic HTML for components
   return (
     <div className="my-8">
       <div>{title}</div>
