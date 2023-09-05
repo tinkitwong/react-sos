@@ -71,26 +71,42 @@ interface ICardContentResponse {
 type ICardContent = ICardContentResponse & { text?: string };
 
 function App() {
-  const [cards, setCards] = useState([]);
+  // Add typings to useStates
+  const [cards, setCards] = useState<ICardContent[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
 
+  // Prefer to use RTK Query to handle data fetching and caching. It is well tested and proven,
+  // manually writing data fetching logic is prone to errors and hard to maintain
   useEffect(() => {
-    const getData = async () => {
-      const data = await fetch("https://sbl.alwaysdata.net/api/posts");
-      return await data.json();
+    const getData: () => Promise<ICardContentResponse[]> = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetch("https://sbl.alwaysdata.net/api/posts");
+        return await data.json();
+      } catch (err) {
+        // TODO: Handle error state. Currently, it will just display the error message
+        // Prefer not to leak errors to user
+        console.log(err);
+        setIsLoading(false);
+        setError("Error when fetching data. Please refresh...");
+      }
     };
 
+    const updatedResults: ICardContent[] = [];
     getData().then((results) => {
       results.forEach((item) => {
-        Object.entries(item).forEach(([key, value]) => {
-          item[key] = value;
-
-          if (key === "body" && item["body"]) {
-            item.text = item["body"].en.substr(0, 50) + "...";
-          }
-        });
+        const updatedItem = Object.assign(
+          item,
+          item.body && item.body !== null
+            ? { text: item.body.en.substr(0, 50) + "..." }
+            : {}
+        );
+        updatedResults.push(updatedItem);
       });
 
-      setCards(results);
+      setCards(updatedResults);
+      setIsLoading(false);
     });
   }, []);
 
